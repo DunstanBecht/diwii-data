@@ -1,0 +1,2 @@
+SELECT COUNT(*)
+FROM orbis_2021_02_18;

@@ -1,0 +1,18 @@
+SELECT COUNT(*), COUNT(DISTINCT mail)
+FROM survey;
+
+SELECT COUNT(*)
+FROM survey
+WHERE lastSend IS NOT NULL;
+
+SELECT COUNT(*)
+FROM survey
+WHERE opened IS NOT NULL;
+
+SELECT COUNT(*)
+FROM survey
+WHERE answerDate IS NOT NULL;
+
+SELECT COUNT(*)
+FROM survey
+WHERE need = '1';

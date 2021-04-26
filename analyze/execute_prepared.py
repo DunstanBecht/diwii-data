@@ -7,17 +7,17 @@
 
 import os
 
-import tools.connect as connect
-import tools.terminals as terminals
+import tools.connect
+import tools.terminals
 
     #========= CONSTANTS =================================================#
 
-FOLDER = 'sql/requests/'
+FOLDER = 'sql/prepared/'
 
     #========= TERMINAL ==================================================#
 
 print("Prepared SQL requests.")
-terminals.stopInfo()
+tools.terminals.stopInfo()
 
 while True:
     files = os.listdir(FOLDER)
@@ -25,12 +25,12 @@ while True:
     for i in range(len(files)):
         print('|'+str(i+1)+'| '+files[i].split('.')[0])
     choice = input('|>| select: ')
-    if choice==terminals.STOP:
+    if choice==tools.terminals.STOP:
         break
     choice = int(choice)
     if choice>len(files) or choice<1:
         break
     print('')
-    print(connect.execute(open(FOLDER+files[choice-1]).read()))
+    print(tools.connect.execute(open(FOLDER+files[choice-1]).read()))
 
-terminals.finished()
+tools.terminals.finished()

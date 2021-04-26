@@ -5,61 +5,61 @@
 
     #========= IMPORTS ===================================================#
 
-import tools.connect as connect
-import tools.terminals as terminals
-import tools.selections as selections
+import tools.connect
+import tools.terminals
+import tools.selections
 import codes.insee
 
     #========= EXPORT ====================================================#
 
-print("Tool for maitaining consistency between the script and the report.")
+print("Tool for maitaining consistency between the code and the report.")
+tools.terminals.stopInfo()
 
-# Colors / froms codes to exported
-if True:
+if tools.terminals.do("export selection.tex"):
 
     f = open("../exported/report/selections.tex", "w", encoding='utf-8')
 
     def countEnterprises(enterprises, f):
-        size_enterprises = connect.execute("SELECT COUNT(*) FROM "+enterprises["expression"])[0][0]
+        size_enterprises = tools.connect.execute("SELECT COUNT(*) FROM "+enterprises["expression"])[0][0]
         f.write("\\newcommand\SelectionEnterprises"+enterprises["name"]+"{"+str(size_enterprises)+"}\n")
 
     def countEstablishements(establishments, f):
-        size_establishments = connect.execute("SELECT COUNT(*) FROM "+establishments["expression"])[0][0]
+        size_establishments = tools.connect.execute("SELECT COUNT(*) FROM "+establishments["expression"])[0][0]
         f.write("\\newcommand\SelectionEstablishments"+establishments["name"]+"{"+str(size_establishments)+"}\n")
 
-    for selection in selections.MAIN:
-        f.write("\\newcommand\Selection"+selection+"{"+selections.selectionSymbole(selection)[1:-1]+"}\n")
-        f.write("\definecolor{Selection"+selection+"}{RGB}{"+", ".join([str(j) for j in selections.MAIN[selection]["color"]])+"}\n")
-        f.write("\\newcommand\SelectionDescription"+selection+"{"+selections.MAIN[selection]["legend"]+"}\n")
+    for selection in tools.selections.MAIN:
+        f.write("\\newcommand\Selection"+selection+"{"+tools.selections.selectionSymbole(selection)[1:-1]+"}\n")
+        f.write("\definecolor{Selection"+selection+"}{RGB}{"+", ".join([str(j) for j in tools.selections.MAIN[selection]["color"]])+"}\n")
+        f.write("\\newcommand\SelectionDescription"+selection+"{"+tools.selections.MAIN[selection]["legend"]+"}\n")
 
-        if selections.MAIN[selection]["kind"]=="enterprises":
-            countEnterprises(selections.MAIN[selection], f)
-        if selections.MAIN[selection]["kind"]=="establishments":
-            countEstablishements(selections.MAIN[selection], f)
-            countEnterprises(selections.groupByEnterprise(selections.MAIN[selection]), f)
+        if tools.selections.MAIN[selection]["kind"]=="enterprises":
+            countEnterprises(tools.selections.MAIN[selection], f)
+        if tools.selections.MAIN[selection]["kind"]=="establishments":
+            countEstablishements(tools.selections.MAIN[selection], f)
+            countEnterprises(tools.selections.groupByEnterprise(tools.selections.MAIN[selection]), f)
 
     f.write("\\newcommand\FilterA{\n")
-    for d in selections.FILTER_A:
+    for d in tools.selections.FILTER_A:
         f.write("\item "+d+" : "+codes.insee.DEPARTMENTS[d]+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterD{\n")
-    for d in selections.FILTER_D:
+    for d in tools.selections.FILTER_D:
         f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterE{\n")
-    for d in selections.FILTER_E:
+    for d in tools.selections.FILTER_E:
         f.write("\item "+d+" : "+codes.insee.WORKFORCES[d]+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterM{\n")
-    for d in selections.FILTER_M:
+    for d in tools.selections.FILTER_M:
         f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterP{\n")
-    for d in selections.FILTER_P:
+    for d in tools.selections.FILTER_P:
         f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
@@ -67,6 +67,4 @@ if True:
 
 # I2DF topics / froms codes to exported
 
-
-
-terminals.finished()
+tools.terminals.finished()

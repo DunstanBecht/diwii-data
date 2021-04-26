@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import folium
 import json
 
-import tools.connect as connect
+import tools.connect
 import tools.export
-import codes.insee as insee
+import codes.insee
 
     #========= CONSTANTS =================================================#
 
@@ -25,10 +25,10 @@ def map(selection):
     request = ("SELECT codePostalEtablissement, COUNT(*)\n"
                "FROM "+selection['expression']+"\n"
                "GROUP BY codePostalEtablissement")
-    answer = connect.execute(request)
+    answer = tools.connect.execute(request)
     color = '#%02x%02x%02x' % selection["color"]
     m = folium.Map(location=[45.5, 4.819629], tiles="stamentoner", zoom_start=8)
-    folium.GeoJson(json.load(open("aura.geojson"))).add_to(m)
+    folium.GeoJson(json.load(open("../sources/gregoiredavid/aura.geojson"))).add_to(m)
     factor = -0.008*len(answer)+5.48
     for a in answer:
         try:
@@ -57,13 +57,13 @@ def figureEstablishmentsByWorkforce(*selections):
                    "FROM "+selection['expression']+"\n"
                    "GROUP BY trancheEffectifsEtablissement\n"
                    "ORDER BY trancheEffectifsEtablissement ASC")
-        answers.append(connect.execute(request))
+        answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(*answers)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.15)
     plt.xlabel("Tranche d'effectif de l'établissement")
     plt.ylabel("Nombre d'établissements")
-    plt.xticks(x, [insee.WORKFORCES[n] for n in name], rotation = 90)
+    plt.xticks(x, [codes.insee.WORKFORCES[n] for n in name], rotation = 90)
     plt.savefig(FOLDER+"establishments_by_workforce/"+"_with_".join([t["name"] for t in selections])+".pdf")
 
 def figureEstablishmentsByDivision(*selections):
@@ -75,7 +75,7 @@ def figureEstablishmentsByDivision(*selections):
                    "FROM "+selection["expression"]+"\n"
                    "GROUP BY SUBSTRING(activitePrincipaleEtablissement, 1, 2)\n"
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
-        answers.append(connect.execute(request))
+        answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(*answers)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
@@ -95,7 +95,7 @@ def figureEnterprisesByDivision(*selections):
                    "SELECT * FROM "+selection["expression"]+" GROUP BY siren) AS t\n"
                    "GROUP BY SUBSTRING(activitePrincipaleEtablissement, 1, 2)\n"
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
-        answers.append(connect.execute(request))
+        answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(*answers)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
@@ -116,7 +116,7 @@ def figureEnterprisesByOwnedEstablishments(*selections):
                     "FROM "+selection["expression"]+"\n"
                     "GROUP BY siren) AS t\n"
                    "GROUP BY nb")
-        answer = connect.execute(request)
+        answer = tools.connect.execute(request)
         a = []
         s = 0
         frontier = 10

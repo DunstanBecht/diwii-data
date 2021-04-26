@@ -7,8 +7,8 @@
 
 import csv
 
-import tools.connect as connect
-import tools.terminals as terminals
+import tools.connect
+import tools.terminals
 import codes.insee as insee
 
     #========= CONSTANTS =================================================#
@@ -17,7 +17,7 @@ FOLDER = "../exported/contacts/"
 
     #========= VARIABLES =================================================#
 
-tables = ["Orbis_2021_02_18", "Insee_StockEtablissement_Filtered"]
+tables = ["Orbis_2021_02_18", "insee_StockEtablissement_Filtered"]
 tables_alias = ["orbis", "insee"]
 joins = ["AutreNdegdidentificationdelentreprise", "siren"]
 
@@ -33,7 +33,7 @@ def processActivitePrincipaleEtablissement(v):
     if v!="" and v!=None:
         if '\n' in v:
             return '\n'.join([processActivitePrincipaleEtablissement(u) for u in v.split('\n')])
-        return "("+v+") : "+insee.descriptionOfActivityCode(v)
+        return "("+v+") : "+codes.insee.descriptionOfActivityCode(v)
     else:
         return ""
 
@@ -41,8 +41,8 @@ def processSection(v):
     if v!="" and v!=None:
         if '\n' in v:
             return '\n'.join([processSection(u) for u in v.split('\n')])
-        section = insee.enclosingActivityCode(1, v)
-        return "("+section+") : "+insee.descriptionOfActivityCode(section)
+        section = codes.insee.enclosingActivityCode(1, v)
+        return "("+section+") : "+codes.insee.descriptionOfActivityCode(section)
     else:
         return ""
 
@@ -50,7 +50,7 @@ def processTrancheEffectifsEtablissement(v):
     if v!="" and v!=None:
         if '\n' in v:
             return '\n'.join([processTrancheEffectifsEtablissement(u) for u in v.split('\n')])
-        return "("+str(v)+") : "+insee.WORKFORCES[v]+" employés"
+        return "("+str(v)+") : "+codes.insee.WORKFORCES[v]+" employés"
     else:
         return ""
 
@@ -63,13 +63,13 @@ view_establishment = [
         ["siret",
          "Siret (établissement)"],
 
-        ["NomdelentrepriseLatinalphabet",
+        ["name",
          "["+tables_alias[0]+"]\nNom"],
 
-        ["Telephone",
+        ["phone",
          "["+tables_alias[0]+"]\nTéléphone"],
 
-        ["Email",
+        ["mail",
          "["+tables_alias[0]+"]\nEmail"],
 
         ["etablissementSiege",
@@ -228,14 +228,14 @@ views["errors"] = [sql, view_columns]
 
 if __name__ == '__main__':
     print("Tool for exporting contacts data.")
-    terminals.stopInfo()
+    tools.terminals.stopInfo()
 
     if tools.terminals.do("export qualitative table"):
         folder = "../../Qualitative/Contacts/"
         separator = ','
         for name in views:
 
-            answer = connect.execute(views[name][0])
+            answer = tools.connect.execute(views[name][0])
             data = [[c[1] for c in views[name][1]]]+[[views[name][1][k][2](answer[j][k]) if len(views[name][1][k])==3 else answer[j][k] for k in range(len(views[name][1]))] for j in range(len(answer))]
 
             print('-> Exporting '+name+". ("+str(len(answer))+" rows)")
@@ -248,11 +248,11 @@ if __name__ == '__main__':
 
     if tools.terminals.do("export quantitative table"):
         sql = "SELECT siren, name, CONCAT('https://aurasmus.becht.network/', siren, '/', token) FROM Survey WHERE answerDate IS NULL;"
-        answer = connect.execute(sql)
+        answer = tools.connect.execute(sql)
 
         with open(FOLDER+'links.csv', 'w', newline='') as csvfile:
             spamwriter = csv.writer(csvfile, delimiter=',', quotechar='"')
             for row in answer:
                 spamwriter.writerow(row)
 
-    terminals.finished()
+    tools.terminals.finished()

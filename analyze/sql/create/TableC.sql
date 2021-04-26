@@ -1,17 +1,9 @@
-DROP TABLE IF EXISTS survey;
+CREATE TABLE TableC LIKE insee_StockEtablissement;
 
-CREATE TABLE survey AS SELECT siren, Email AS mail, NomdelentrepriseLatinalphabet AS name, SUBSTRING(activitePrincipaleEtablissement, 1, 2) as division
-FROM (
-  SELECT *
-  FROM Orbis_2021_02_18
-  INNER JOIN Insee_StockEtablissement_Filtered
-  ON Orbis_2021_02_18.AutreNdegdidentificationdelentreprise = Insee_StockEtablissement_Filtered.siren
-  ORDER BY siren ASC, etablissementSiege DESC
-) AS t
-WHERE Email NOT LIKE ''
-GROUP BY siren;
-
-ALTER TABLE survey ADD COLUMN (
+ALTER TABLE TableC ADD COLUMN (
+mail VARCHAR(256),
+name VARCHAR(200),
+phone VARCHAR(20),
 token VARCHAR(128),
 lastSend DATETIME,
 answerDate DATETIME,
@@ -55,6 +47,3 @@ answer6b VARCHAR(1),
 
 answer7 VARCHAR(100)
 );
-
-UPDATE Survey
-SET token = MD5(RAND());

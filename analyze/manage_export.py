@@ -11,6 +11,7 @@ import codes.survey
 
     #========= TERMINAL ==================================================#
 
+print("Tool for exporting figures, maps or spreadsheets.")
 tools.terminals.stopInfo()
 
 if tools.terminals.do("export data 'insee'"):

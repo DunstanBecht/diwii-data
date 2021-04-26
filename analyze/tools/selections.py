@@ -3,7 +3,7 @@
 
 """Source: dunstan.becht.network"""
 
-import tools.connect as connect
+import tools.connect
 
     #========= FUNCTIONS =================================================#
 
@@ -14,9 +14,9 @@ def useTable(selectionName):
     tableName = "Table"+selectionName
     selection = MAIN[selectionName]
     sql = "SHOW TABLES"
-    if tableName not in [a[0] for a in connect.execute(sql)]:
+    if tableName not in [a[0] for a in tools.connect.execute(sql)]:
         print("Creation of table "+tableName)
-        print(connect.execute("CREATE TABLE "+tableName+" AS SELECT * FROM "+selection["expression"]))
+        print(tools.connect.execute("CREATE TABLE "+tableName+" AS SELECT * FROM "+selection["expression"]))
     selection["expression"] = tableName+" AS Selection"+selectionName
 
 def groupByEnterprise(establishments):
@@ -44,14 +44,17 @@ def checkPartition(selections, union):
     parts = []
     for selection in selections:
         sql = "SELECT COUNT(*)/(SELECT COUNT(*) FROM "+union["expression"]+") FROM "+selection["expression"]+";"
-        parts.append(connect.execute(sql)[0][0])
+        part = tools.connect.execute(sql)[0][0]
+        if part==None:
+            raise Exception("empty table: division by zero")
+        parts.append(part)
     print("Union: "+" + ".join([str(p) for p in parts])+" = "+str(sum(parts)))
     # intersection ?
     if selections[0]["kind"]=="enterprises":
         sql = "SELECT COUNT(*) FROM "+selections[0]["expression"]+" JOIN "+selections[1]["expression"]+" ON Selection"+selections[0]["name"]+".siren = Selection"+selections[1]["name"]+".siren"
     else:
         sql = "SELECT COUNT(*) FROM "+selections[0]["expression"]+" JOIN "+selections[1]["expression"]+" ON Selection"+selections[0]["name"]+".siret = Selection"+selections[1]["name"]+".siret"
-    intersection = connect.execute(sql)[0][0]
+    intersection = tools.connect.execute(sql)[0][0]
     print("Intersections: "+str(intersection))
     if intersection!=0:
         return False
@@ -65,11 +68,11 @@ MAIN = {}
 
 MAIN['F'] = {
     'expression': ("(SELECT *\n"
-                   "FROM Insee_StockEtablissement\n"
+                   "FROM insee_StockEtablissement\n"
                    "WHERE\n"
                    "etatAdministratifEtablissement LIKE 'A' AND\n"
                    "caractereEmployeurEtablissement LIKE 'O'\n"
-                   ") AS SelectionA"),
+                   ") AS SelectionF"),
     'color': ( 58,  58,  58),
     'legend': "établissements français actifs employeurs"
 }
@@ -162,11 +165,13 @@ useTable('E')
 
     #========= C
 
+if "TableC" not in [a[0] for a in tools.connect.execute("SHOW TABLES")]:
+    print("Creation of table C")
+    print(tools.connect.execute(open("sql/create/TableC.sql").read()))
+
 MAIN["C"] = {
-    'expression': "(SELECT Survey.*, SelectionE.siret, SelectionE.trancheEffectifsEtablissement, SelectionE.activitePrincipaleEtablissement\n"
-                  "FROM Survey\n"
-                  "JOIN "+MAIN["E"]["expression"]+"\n"
-                  "ON Survey.siren = SelectionE.siren\n"
+    'expression': "(SELECT *\n"
+                  "FROM TableC\n"
                   ") AS SelectionC",
     'color': (128,  51,   0),
     'legend': "partie de "+selectionSymbole("E")+" contactée",
@@ -273,7 +278,7 @@ MAIN["Y"] = {
     #========= I
 
 MAIN["I"] = {
-    'expression': ("(SELECT * FROM AIF_I2DF) AS SelectionI"),
+    'expression': ("(SELECT * FROM aif_I2DF) AS SelectionI"),
     'color': ( 90, 160,  44),
     'legend': "partie de "+selectionSymbole("A")+" évaluée par l'I2DF",
     'kind': "enterprises"

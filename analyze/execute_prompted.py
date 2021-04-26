@@ -5,20 +5,20 @@
 
     #========= IMPORTS ===================================================#
 
-import tools.connect as connect
-import tools.terminals as terminals
+import tools.connect
+import tools.terminals
 
     #========= TERMINAL ==================================================#
 
 print("SQL command prompt.")
-terminals.stopInfo()
+tools.terminals.stopInfo()
 
 def promptSQL():
-    return input("\nSQL ["+connect.DB["database"]+"]> ")
+    return input("\nSQL ["+tools.connect.DB["database"]+"]> ")
 
 request = promptSQL()
-while request!=terminals.STOP:
-    print(connect.execute(request))
+while request!=tools.terminals.STOP:
+    print(tools.connect.execute(request))
     request = promptSQL()
 
-terminals.finished()
+tools.terminals.finished()

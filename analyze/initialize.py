@@ -5,24 +5,23 @@
 
     #========= IMPORTS ===================================================#
 
-import tools.connect as connect
-import tools.terminals as terminals
-import tools.files as files
+import tools.connect
+import tools.terminals
+import tools.files
 
     #========= TERMINAL ==================================================#
 
 print("Tool for creating a table in the database.")
-terminals.stopInfo()
+tools.terminals.stopInfo()
 
-source, file = files.selector()
-handler = files.Handler(source, file)
+source, file = tools.files.selector()
+handler = tools.files.Handler(source, file)
 
-if input("Initialize table '"+handler.table+"'? Type 'go' to proceed: ")=="go":
-
-    print('Table deletion.')
-    connect.execute("DROP TABLE IF EXISTS "+handler.table)
-
+if tools.terminals.do("initialize table"):
+    print('Table deletion (if exists).')
+    tools.connect.execute("DROP TABLE IF EXISTS "+handler.table)
     print('Table creation.')
-    connect.execute(open("sql/create/"+handler.table+".sql", "r").read())
+    tools.connect.execute(open("sql/create/"+handler.table+".sql", "r").read())
+    print("Table name: "+handler.table)
 
-terminals.finished()
+tools.terminals.finished()

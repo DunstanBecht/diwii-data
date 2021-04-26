@@ -55,7 +55,7 @@ class Handler:
                                  quotechar=self.quotechar)
         self.columns = [formatColumn(c) for c in next(self.reader)]
         self.finished = False
-        path1 = "sql/reate/"+self.table+".sql"
+        path1 = "sql/create/"+self.table+".sql"
         if not os.path.exists(path1):
             self.createFile1(path1)
         path2 = "process/"+self.table+".py"

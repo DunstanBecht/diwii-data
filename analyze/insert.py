@@ -5,9 +5,9 @@
 
     #========= IMPORTS ===================================================#
 
-import tools.connect as connect
-import tools.terminals as terminals
-import tools.files as files
+import tools.connect
+import tools.terminals
+import tools.files
 
     #========= VARIABLES =================================================#
 
@@ -17,12 +17,12 @@ insertions_by_request = 1000
 
 print("Tool for saving data to the database.")
 print("The table must have been created with initialize.py before.")
-terminals.stopInfo()
+tools.terminals.stopInfo()
 
-source, file = files.selector()
-handler = files.Handler(source, file)
+source, file = tools.files.selector()
+handler = tools.files.Handler(source, file)
 
-if input("Insert in table '"+handler.table+"'? Type 'go' to proceed: ")=="go":
+if tools.terminals.do("insert in table"):
     columns = handler.columns
     stmt = ("INSERT INTO "+handler.table+" "
             "("+', '.join(columns)+") "
@@ -30,6 +30,6 @@ if input("Insert in table '"+handler.table+"'? Type 'go' to proceed: ")=="go":
 
     while not handler.finished:
         data = handler.next(insertions_by_request)
-        connect.execute([stmt, data], True)
+        tools.connect.execute([stmt, data], True)
 
-terminals.finished()
+tools.terminals.finished()

@@ -17,4 +17,7 @@ def finished():
 
 def do(action):
     print("\n"+action.capitalize()+"?")
-    return input("Type 'yes' to proceed: ")=="yes"
+    answer = input("Type 'yes' to proceed: ")
+    if answer==STOP:
+        raise SystemExit()
+    return answer=="yes"

@@ -19,8 +19,18 @@ def useTable(selectionName):
         print(tools.connect.execute("CREATE TABLE "+tableName+" AS SELECT * FROM "+selection["expression"]))
     selection["expression"] = tableName+" AS Selection"+selectionName
 
+def orderByHeadquarters(establishments):
+    assert establishments["kind"]=='establishments'
+    establishments = establishments.copy()
+    establishments["expression"] = ("(SELECT *\n"
+                                    "FROM "+establishments["expression"]+"\n"
+                                    "ORDER BY siren ASC, etablissementSiege DESC\n"
+                                    ") AS Selection"+establishments["name"]+"")
+    return establishments
+
 def groupByEnterprise(establishments):
-    enterprises = establishments.copy()
+    assert establishments["kind"]=='establishments'
+    enterprises = orderByHeadquarters(establishments)
     enterprises["expression"] = ("(SELECT *\n"
                                  "FROM "+enterprises["expression"]+"\n"
                                  "GROUP BY siren\n"
@@ -61,6 +71,11 @@ def checkPartition(selections, union):
     return True
 
     #========= CONSTANTS =================================================#
+
+KINDS = {
+    "establishments": "établissements",
+    "enterprises": "entreprises",
+}
 
 MAIN = {}
 

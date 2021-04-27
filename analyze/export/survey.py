@@ -19,7 +19,7 @@ import tools.export
 
 FOLDER = "../exported/survey/"
 
-    #========= FUNCTIONS =================================================#
+    #========= EXPORT FUNCTIONS ==========================================#
 
 def pourcentage(answer, selection, value=1):
     request = ("SELECT 100*COUNT(*)/(SELECT COUNT(*) FROM "+selection["expression"]+")\n"
@@ -59,7 +59,7 @@ def figurePourcentages(answer, selections, data=None, sort=True):
     ax.set_yticklabels(name)
     steps = [i*20 for i in range(6)]
     plt.xticks(steps, [str(s)+'%' for s in steps])
-    plt.xlabel("Pourcentage d'"+kind)
+    plt.xlabel("Pourcentage d'"+tools.selections.KINDS[kind])
     ax.invert_yaxis()  # labels read top-to-bottom
     ax.legend([t["legend"] for t in selections])
     for p in ax.patches:

@@ -76,7 +76,7 @@ if tools.terminals.do("export data 'survey'"):
             ],
             tools.selections.groupByEnterprise(tools.selections.MAIN["R"]),
         ]
-        
+
     ]
 
     if tools.terminals.do("check partitions"):
@@ -109,5 +109,19 @@ if tools.terminals.do("export data 'aif'"):
 
     export.aif.figureTopics(tools.selections.MAIN["I"])
     export.aif.figureLevers(tools.selections.MAIN["I"])
+
+if tools.terminals.do("export data 'contacts'"):
+    import export.contacts
+
+    export.contacts.spreadsheet()
+
+if tools.terminals.do("export data 'report'"):
+    import export.report
+
+    if tools.terminals.do("export selection.tex"):
+        export.report.selections()
+
+    if tools.terminals.do("export i2df.tex"):
+        export.report.i2df()
 
 tools.terminals.finished()

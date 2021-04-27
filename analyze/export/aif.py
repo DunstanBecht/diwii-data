@@ -15,7 +15,7 @@ import tools.export
 
 FOLDER = "../exported/aif/"
 
-    #========= GENERATORS ================================================#
+    #========= EXPORT FUNCTIONS ==========================================#
 
 def figureTopics(*selections):
     answers = []

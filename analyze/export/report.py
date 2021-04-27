@@ -8,16 +8,17 @@
 import tools.connect
 import tools.terminals
 import tools.selections
-import codes.insee
 
-    #========= EXPORT ====================================================#
+    #========= CONSTANTS =================================================#
 
-print("Tool for maitaining consistency between the code and the report.")
-tools.terminals.stopInfo()
+FOLDER = "../exported/report/"
 
-if tools.terminals.do("export selection.tex"):
+    #========= EXPORT FUNCTIONS ==========================================#
 
-    f = open("../exported/report/selections.tex", "w", encoding='utf-8')
+def selections():
+    import codes.insee
+
+    f = open(FOLDER+"selections.tex", "w", encoding='utf-8')
 
     def countEnterprises(enterprises, f):
         size_enterprises = tools.connect.execute("SELECT COUNT(*) FROM "+enterprises["expression"])[0][0]
@@ -65,6 +66,20 @@ if tools.terminals.do("export selection.tex"):
 
     f.close()
 
-# I2DF topics / froms codes to exported
+def i2df():
+    import codes.i2df
 
-tools.terminals.finished()
+    f = open(FOLDER+"i2df.tex", "w", encoding='utf-8')
+    levers = []
+    for lever in codes.i2df.LEVERS:
+        label_l = "\\textbf{"+lever+"} : "+codes.i2df.LEVERS[lever]
+        topics = []
+        for topic in codes.i2df.TOPICS_BY_LEVERS[lever]:
+            topics.append("& \\textbf{"+lever+str(topic)+"} : "+codes.i2df.TOPICS[lever+str(topic)])
+
+        tex = "\multirow{"+str(len(codes.i2df.TOPICS_BY_LEVERS[lever]))+"}{\linewidth}{"+label_l+"}\n"
+        tex += " \\\ \cline{2-2} \n".join(topics)
+        levers.append(tex)
+
+    f.write(" \\\ \hline \n".join(levers)+" \\\ ")
+    f.close()

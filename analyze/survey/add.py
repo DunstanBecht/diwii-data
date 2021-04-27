@@ -39,7 +39,7 @@ sql = ("INSERT INTO TableC\n"
        "ON restriction.siren = contacts."+siren_column+"\n"
        "WHERE siren NOT IN (SELECT siren FROM TableC);\n"
        "UPDATE TableC\n"
-       "SET token = MD5(RAND())\n"
+       "SET token = MD5(siren)\n"
        "WHERE token IS NULL;")
 
 print(tools.connect.execute(sql))

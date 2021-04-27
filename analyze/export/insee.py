@@ -17,7 +17,7 @@ import codes.insee
 
 FOLDER = "../exported/insee/"
 
-    #========= EXPORT FUNCTIONS ===========================================#
+    #========= EXPORT FUNCTIONS ==========================================#
 
 def map(selection):
     assert tools.selections.checkKind([selection])=="establishments"
@@ -27,7 +27,7 @@ def map(selection):
                "GROUP BY codePostalEtablissement")
     answer = tools.connect.execute(request)
     color = '#%02x%02x%02x' % selection["color"]
-    m = folium.Map(location=[45.5, 4.819629], tiles="stamentoner", zoom_start=8)
+    m = folium.Map(location=[45.5, 4.819629], tiles="stamentoner", zoom_start=8, control_scale=True)
     folium.GeoJson(json.load(open("../sources/gregoiredavid/aura.geojson"))).add_to(m)
     factor = -0.008*len(answer)+5.48
     for a in answer:

@@ -81,7 +81,7 @@ def enclosingActivityCode(level, code):
     current_level = levelOfActivityCode(code)
     if level > current_level:
         raise Exception("Inferior level!")
-    for i in range(0, len(naf_tout)):
+    for i in range(0, len(ACTIVITY_TREE[ACTIVITY_TREE.columns[5-current_level]])):
         if ACTIVITY_TREE[ACTIVITY_TREE.columns[5-current_level]][i]==code:
             return ACTIVITY_TREE[ACTIVITY_TREE.columns[5-level]][i]
     return None

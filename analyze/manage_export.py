@@ -116,8 +116,10 @@ if tools.terminals.do("export data 'survey'"):
 if tools.terminals.do("export data 'aif'"):
     import export.aif
 
-    export.aif.figureTopics(tools.selections.MAIN["I"])
-    export.aif.figureLevers(tools.selections.MAIN["I"])
+    export.aif.figureTopics(tools.selections.MAIN["W"],
+                            tools.selections.MAIN["Y"])
+    export.aif.figureLevers(tools.selections.MAIN["W"],
+                            tools.selections.MAIN["Y"])
 
 if tools.terminals.do("export data 'contacts'"):
     import export.contacts
@@ -127,10 +129,10 @@ if tools.terminals.do("export data 'contacts'"):
 if tools.terminals.do("export data 'report'"):
     import export.report
 
-    if tools.terminals.do("export selection.tex"):
+    if tools.terminals.do("export 'selections.tex'"):
         export.report.selections()
 
-    if tools.terminals.do("export i2df.tex"):
+    if tools.terminals.do("export 'i2df.tex'"):
         export.report.i2df()
 
 tools.terminals.finished()

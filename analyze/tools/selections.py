@@ -337,6 +337,40 @@ MAIN["I"] = {
     'kind': "enterprises"
 }
 
+    #========= W
+
+FILTER_W = [
+    '0-13',
+    '14-19',
+    '20-49',
+]
+MAIN["W"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["I"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["Effectif LIKE '%"+str(code)+ "%'" for code in FILTER_W])+"\n"
+                   ") AS SelectionW"),
+    'color': (  50,  50,  50),
+    'legend': "partie de "+selectionSymbole("I")+" de $-$ de 50 employés",
+    'kind': "enterprises"
+}
+
+    #========= Y
+
+FILTER_Y = [
+    '50-249',
+    '250-499',
+    '500-5000',
+]
+MAIN["Y"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["I"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["Effectif LIKE '%"+str(code)+ "%'" for code in FILTER_Y])+"\n"
+                   ") AS SelectionY"),
+    'color': ( 100, 100, 100),
+    'legend': "partie de "+selectionSymbole("I")+" de $+$ de 50 employés",
+    'kind': "enterprises"
+}
+
     #========= FOR ALL IN MAIN
 
 for selection in MAIN:

@@ -41,27 +41,27 @@ def selections():
 
     f.write("\\newcommand\FilterA{\n")
     for d in tools.selections.FILTER_A:
-        f.write("\item "+d+" : "+codes.insee.DEPARTMENTS[d]+"\n")
+        f.write("\item \\textbf{"+d+"} : "+codes.insee.DEPARTMENTS[d]+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterD{\n")
     for d in tools.selections.FILTER_D:
-        f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
+        f.write("\item \\textbf{"+d+"} : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterE{\n")
     for d in tools.selections.FILTER_E:
-        f.write("\item "+d+" : "+codes.insee.WORKFORCES[d]+"\n")
+        f.write("\item \\textbf{"+d+"} : "+codes.insee.WORKFORCES[d]+" employés\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterM{\n")
     for d in tools.selections.FILTER_M:
-        f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
+        f.write("\item \\textbf{"+d+"} : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
     f.write("\\newcommand\FilterP{\n")
     for d in tools.selections.FILTER_P:
-        f.write("\item "+d+" : "+codes.insee.descriptionOfActivityCode(d)+"\n")
+        f.write("\item \\textbf{"+d+"} : "+codes.insee.descriptionOfActivityCode(d)+"\n")
     f.write("}\n")
 
     f.close()

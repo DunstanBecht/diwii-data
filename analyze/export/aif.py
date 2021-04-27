@@ -23,7 +23,7 @@ def figureTopics(*selections):
         request = ("SELECT "+", ".join(["AVG("+topic+")" for topic in codes.i2df.TOPICS])+"\n"
                    "FROM "+selection["expression"]+"\n")
         answer = tools.connect.execute(request)[0]
-        answers.append([[codes.i2df.TOPICS_CODES[i], answer[i]] for i in range(len(codes.i2df.TOPICS))])
+        answers.append([[codes.i2df.TOPICS_CODES[i], int(100*answer[i])/100] for i in range(len(codes.i2df.TOPICS))])
     name, data = tools.export.homogenize(*answers)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.15)
@@ -44,7 +44,7 @@ def figureLevers(*selections):
         for a in answer:
             avg[codes.i2df.LEVERS_CODES.index(a[0][0])].append(a[1])
         for i in range(len(avg)):
-            avg[i] = [codes.i2df.LEVERS_CODES[i], sum(avg[i])/len(avg[i])]
+            avg[i] = [codes.i2df.LEVERS_CODES[i], int(100*sum(avg[i])/len(avg[i]))/100]
         answers.append(avg)
     name, data = tools.export.homogenize(*answers)
     fig, x = tools.export.templateFigure(selections, data)

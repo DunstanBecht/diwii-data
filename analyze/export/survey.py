@@ -34,9 +34,9 @@ def figurePourcentages(answer, selections, data=None, sort=True):
     tools.export.inform(selections)
     kind = tools.selections.checkKind(selections)
     plt.rcdefaults()
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(9, 6))
     plt.xlim(0, 110)
-    fig.subplots_adjust(left=0.41, right=0.99, top=0.9, bottom=0.1)
+    fig.subplots_adjust(left=0.41, right=0.99, top=0.95, bottom=0.09)
     plt.grid(True)
     plt.title(codes.survey.COMMON_PARTS[answer])
     name = []
@@ -51,17 +51,17 @@ def figurePourcentages(answer, selections, data=None, sort=True):
 
     #if sort:
     #    data = sorted(data, key=lambda x: x[0], reverse=True)
-    width = 0.8/len(selections)
+    width, pitch = tools.export.barGeometry(selections)
     y = np.arange(len(data[0]))
     for i in range(len(selections)):
-        ax.barh(y+i*width, data[i], width, align='center', color='#%02x%02x%02x' % selections[i]["color"])
-    ax.set_yticks(y+width/2)
+        ax.barh(y+i*width, data[i], width, color='#%02x%02x%02x' % selections[i]["color"])
+    ax.set_yticks(y+pitch)
     ax.set_yticklabels(name)
     steps = [i*20 for i in range(6)]
     plt.xticks(steps, [str(s)+'%' for s in steps])
     plt.xlabel("Pourcentage d'"+tools.selections.KINDS[kind])
     ax.invert_yaxis()  # labels read top-to-bottom
-    ax.legend([t["legend"] for t in selections])
+    ax.legend([tools.selections.selectionSymbole(t["name"]) for t in selections])
     for p in ax.patches:
         percentage = '{:.1f}%'.format(p.get_width())
         X = p.get_x() + p.get_width() + 1

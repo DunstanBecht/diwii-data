@@ -31,11 +31,11 @@ def homogenize(*answers):
     return name, data
 
 def barGeometry(selections):
-    bar_width = 0.8/len(selections)
+    bar_width = 0.9/len(selections)
     if len(selections)==1:
         return bar_width, 0
     else:
-        return bar_width, bar_width/(len(selections))
+        return bar_width, (len(selections)-1)*bar_width/2
 
 def templateFigure(selections, data, figsize=(9, 11)):
     fig, ax = plt.subplots(figsize=figsize)

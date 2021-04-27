@@ -64,6 +64,15 @@ if tools.terminals.do("export data 'survey'"):
     partitions = [
         [
             [
+                tools.selections.MAIN["MX"],
+                tools.selections.MAIN["MY"],
+                tools.selections.MAIN["PX"],
+                tools.selections.MAIN["PY"],
+            ],
+            tools.selections.MAIN["R"],
+        ],
+        [
+            [
                 tools.selections.MAIN["X"],
                 tools.selections.MAIN["Y"],
             ],

@@ -290,6 +290,44 @@ MAIN["Y"] = {
     'legend': "partie de "+selectionSymbole("R")+" de $+$ de 50 employés",
 }
 
+    #========= MX MY PX PY
+
+MAIN["MX"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["M"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["trancheEffectifsEtablissement LIKE '"+str(code)+ "'" for code in FILTER_X])+"\n"
+                   ") AS SelectionMX"),
+    'color': (255,  42,  42),
+    'legend': "partie de "+selectionSymbole("R")+" manufacturière de $-$ de 50 employés",
+}
+
+MAIN["MY"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["M"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["trancheEffectifsEtablissement LIKE '"+str(code)+ "'" for code in FILTER_Y])+"\n"
+                   ") AS SelectionMY"),
+    'color': (170,   0,   0),
+    'legend': "partie de "+selectionSymbole("R")+" manufacturière de $+$ de 50 employés",
+}
+
+MAIN["PX"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["P"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["trancheEffectifsEtablissement LIKE '"+str(code)+ "'" for code in FILTER_X])+"\n"
+                   ") AS SelectionX"),
+    'color': (170, 135, 222),
+    'legend': "partie de "+selectionSymbole("R")+" de type process de $-$ de 50 employés",
+}
+
+MAIN["PY"] = {
+    'expression': ("(SELECT *\n"
+                   "FROM "+MAIN["P"]["expression"]+"\n"
+                   "WHERE\n"+" OR\n".join(["trancheEffectifsEtablissement LIKE '"+str(code)+ "'" for code in FILTER_Y])+"\n"
+                   ") AS SelectionX"),
+    'color': ( 68,  33, 120),
+    'legend': "partie de "+selectionSymbole("R")+" de type process de $+$ de 50 employés",
+}
+
     #========= I
 
 MAIN["I"] = {

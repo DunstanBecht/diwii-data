@@ -207,19 +207,23 @@ MAIN["R"] = {
     #========= M
 
 FILTER_M = [
-    '10',
-    '11',
-    '12',
     '13',
+    '14',
+    '15',
+    '16',
     '17',
     '18',
-    '19',
-    '20',
-    '21',
-    '23',
+    '22',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+    '31',
+    '32',
     '33',
-    '35',
-    '86',
 ]
 MAIN["M"] = {
     'expression': ("(SELECT *\n"
@@ -233,20 +237,15 @@ MAIN["M"] = {
     #========= P
 
 FILTER_P = [
-    '14',
-    '15',
-    '16',
-    '22',
-    '24',
-    '25',
-    '26',
-    '27',
-    '28',
-    '29',
-    '29',
-    '30',
-    '31',
-    '32',
+    '10',
+    '11',
+    '12',
+    '19',
+    '20',
+    '21',
+    '23',
+    '35',
+    '86',
 ]
 MAIN["P"] = {
     'expression': ("(SELECT *\n"
@@ -354,18 +353,18 @@ MAIN["W"] = {
     'kind': "enterprises"
 }
 
-    #========= Y
+    #========= G
 
-FILTER_Y = [
+FILTER_G = [
     '50-249',
     '250-499',
     '500-5000',
 ]
-MAIN["Y"] = {
+MAIN["G"] = {
     'expression': ("(SELECT *\n"
                    "FROM "+MAIN["I"]["expression"]+"\n"
-                   "WHERE\n"+" OR\n".join(["Effectif LIKE '%"+str(code)+ "%'" for code in FILTER_Y])+"\n"
-                   ") AS SelectionY"),
+                   "WHERE\n"+" OR\n".join(["Effectif LIKE '%"+str(code)+ "%'" for code in FILTER_G])+"\n"
+                   ") AS SelectionG"),
     'color': ( 100, 100, 100),
     'legend': "partie de "+selectionSymbole("I")+" de $+$ de 50 employés",
     'kind': "enterprises"

@@ -117,9 +117,9 @@ if tools.terminals.do("export data 'aif'"):
     import export.aif
 
     export.aif.figureTopics(tools.selections.MAIN["W"],
-                            tools.selections.MAIN["Y"])
+                            tools.selections.MAIN["G"])
     export.aif.figureLevers(tools.selections.MAIN["W"],
-                            tools.selections.MAIN["Y"])
+                            tools.selections.MAIN["G"])
 
 if tools.terminals.do("export data 'contacts'"):
     import export.contacts

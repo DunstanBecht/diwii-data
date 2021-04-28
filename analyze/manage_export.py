@@ -54,9 +54,13 @@ if tools.terminals.do("export data 'survey'"):
 
     if tools.terminals.do("export figures 'representativeness'"):
         export.survey.figureEstablishmentsByDivision(tools.selections.MAIN["C"],
-                                                  tools.selections.MAIN["R"])
-        export.survey.figureEstablishmentsByWorkforce(tools.selections.MAIN["C"],
+                                                     tools.selections.MAIN["R"])
+        export.survey.figureEstablishmentsByWorkforce(tools.selections.MAIN["E"],
+                                                      tools.selections.MAIN["C"],
                                                       tools.selections.MAIN["R"])
+        export.survey.figureEstablishmentsByDepartment(tools.selections.MAIN["E"],
+                                                       tools.selections.MAIN["C"],
+                                                       tools.selections.MAIN["R"])
 
     if tools.terminals.do("export spreadsheet 'results'"):
         export.survey.spreadsheetResults()
@@ -111,15 +115,33 @@ if tools.terminals.do("export data 'survey'"):
             export.survey.figurePourcentages(6, selections, None, False)
 
     if tools.terminals.do("export text 'answers'"):
-        export.survey.listTextAnswer(*[tools.selections.groupByEnterprise(p) for p in partitions[0][0]])
+        for p in partitions:
+            export.survey.listTextAnswer(*p[0])
 
 if tools.terminals.do("export data 'aif'"):
     import export.aif
 
-    export.aif.figureTopics(tools.selections.MAIN["W"],
-                            tools.selections.MAIN["G"])
-    export.aif.figureLevers(tools.selections.MAIN["W"],
-                            tools.selections.MAIN["G"])
+    if tools.terminals.do("export figures 'representativeness'"):
+        export.aif.figureEnterprisesByWorkforce(tools.selections.MAIN["I"])
+        export.aif.figureEnterprisesByDepartment(tools.selections.MAIN["I"],
+                                                 tools.selections.MAIN["W"],
+                                                 tools.selections.MAIN["G"])
+
+    if tools.terminals.do("export figures 'topics'"):
+        export.aif.figureTopics(tools.selections.MAIN["W"],
+                                tools.selections.MAIN["G"])
+    if tools.terminals.do("export figures 'levers'"):
+        export.aif.figureLevers(tools.selections.MAIN["W"],
+                                tools.selections.MAIN["G"])
+
+if tools.terminals.do("export data 'cross'"):
+    import export.cross
+
+    for lever in codes.i2df.LEVERS:
+        export.cross.figureMaturityByLeverByDepartment(lever)
+
+    for lever in codes.i2df.LEVERS:
+        export.cross.figureMaturityByLeverByWorforce(lever)
 
 if tools.terminals.do("export data 'contacts'"):
     import export.contacts
@@ -137,5 +159,4 @@ if tools.terminals.do("export data 'report'"):
 
     if tools.terminals.do("export 'stats.tex'"):
         export.report.stats()
-        
 tools.terminals.finished()

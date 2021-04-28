@@ -72,7 +72,7 @@ def figurePourcentages(answer, selections, data=None, sort=True):
 
 def listTextAnswer(*selections):
     tools.export.inform(selections)
-    assert tools.selections.checkKind(selections)=="enterprises"
+    tools.selections.checkKind(selections)
     for column in ["answer2i", "answer7"]:
         answers = []
         for selection in selections:
@@ -83,7 +83,7 @@ def listTextAnswer(*selections):
             for j in range(len(answers[i])):
                 if answers[i][j][-1]!='.':
                     answers[i][j] = answers[i][j]+'.'
-                f.write("\item "+". ".join([s.strip().capitalize() for s in html.unescape(answers[i][j]).split('.')])+"\n")
+                f.write('''\item "'''+". ".join([s.strip().capitalize() for s in html.unescape(answers[i][j]).split('.')]).strip()+'''"\n''')
             f.close()
 
 def figureEstablishmentsByDivision(*selections):
@@ -97,7 +97,7 @@ def figureEstablishmentsByDivision(*selections):
                    "GROUP BY SUBSTRING(activitePrincipaleEtablissement, 1, 2)\n"
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_D)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
     plt.xlabel("Division APE")
@@ -108,6 +108,7 @@ def figureEstablishmentsByDivision(*selections):
 
 def figureEstablishmentsByWorkforce(*selections):
     tools.export.inform(selections)
+    assert tools.selections.checkKind(selections)=="establishments"
     answers = []
     for selection in selections:
         request = ("SELECT trancheEffectifsEtablissement, COUNT(*)\n"
@@ -115,13 +116,31 @@ def figureEstablishmentsByWorkforce(*selections):
                    "GROUP BY trancheEffectifsEtablissement\n"
                    "ORDER BY trancheEffectifsEtablissement ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_E)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.12)
     plt.xlabel("Tranche d'effectif de l'établissement")
     plt.ylabel("Nombre d'établissements")
     plt.xticks(x, [codes.insee.WORKFORCES[n] for n in name], rotation = 90)
     plt.savefig(FOLDER+"representativeness/establishments_by_workforce.pdf")
+
+def figureEstablishmentsByDepartment(*selections):
+    tools.export.inform(selections)
+    assert tools.selections.checkKind(selections)=="establishments"
+    answers = []
+    for selection in selections:
+        request = ("SELECT SUBSTRING(codePostalEtablissement, 1, 2), COUNT(*)\n"
+                   "FROM "+selection['expression']+"\n"
+                   "GROUP BY SUBSTRING(codePostalEtablissement, 1, 2)\n"
+                   "ORDER BY SUBSTRING(codePostalEtablissement, 1, 2) ASC")
+        answers.append(tools.connect.execute(request))
+    name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_A)
+    fig, x = tools.export.templateFigure(selections, data)
+    fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.12)
+    plt.xlabel("Département")
+    plt.ylabel("Nombre d'établissements")
+    plt.xticks(x, name, rotation = 0)
+    plt.savefig(FOLDER+"representativeness/establishments_by_department.pdf")
 
 def spreadsheetResults():
     def processAnswer(v):
@@ -139,12 +158,6 @@ def spreadsheetResults():
 
             ["name",
              "Nom"],
-
-            ["mail",
-             "E-mail"],
-
-            ["phone",
-             "Téléphone"],
 
             ["need",
              "Souhaiteriez-vous être recontacté par un spécialiste de DIWII ?",

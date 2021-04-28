@@ -58,7 +58,7 @@ def figureEstablishmentsByWorkforce(*selections):
                    "GROUP BY trancheEffectifsEtablissement\n"
                    "ORDER BY trancheEffectifsEtablissement ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers, 0, [c for c in codes.insee.WORKFORCES])
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.15)
     plt.xlabel("Tranche d'effectif de l'établissement")
@@ -76,7 +76,7 @@ def figureEstablishmentsByDivision(*selections):
                    "GROUP BY SUBSTRING(activitePrincipaleEtablissement, 1, 2)\n"
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_D)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
     plt.xlabel("Division APE")
@@ -96,7 +96,7 @@ def figureEnterprisesByDivision(*selections):
                    "GROUP BY SUBSTRING(activitePrincipaleEtablissement, 1, 2)\n"
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_D)
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
     plt.xlabel("Division APE")
@@ -127,7 +127,7 @@ def figureEnterprisesByOwnedEstablishments(*selections):
                 a.append([answer[i][0], answer[i][1]])
         a.append([frontier, s])
         answers.append(a)
-    name, data = tools.export.homogenize(*answers)
+    name, data = tools.export.homogenize(answers)
     name[-1] = str(frontier)+" ou +"
     fig, x = tools.export.templateFigure(selections, data)
     fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)

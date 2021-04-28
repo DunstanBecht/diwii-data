@@ -84,6 +84,10 @@ def i2df():
     f.close()
 
 def stats():
+    sql = ("SELECT COUNT(*), COUNT(DISTINCT siren)\n"
+           "FROM TableC\n"
+           "WHERE need = '1';")
+    needs = tools.connect.execute(sql)[0]
     A = 0.02
     p = 0.03
     n_E = count(tools.selections.MAIN["E"])
@@ -101,4 +105,6 @@ def stats():
     f.write("\\newcommand\Zreal{"+str(int(100*Z_real)/100)+"} \n")
     f.write("\\newcommand\Preal{"+str(int(10000*P)/10000)+"} \n")
     f.write("\\newcommand\Reliability{"+str(int(10000*P)/100)+"} \n")
+    f.write("\\newcommand\\NeedsEnterprises{"+str(needs[1])+"} \n")
+    f.write("\\newcommand\\NeedsEstablishments{"+str(needs[0])+"} \n")
     f.close()

@@ -392,3 +392,31 @@ for div in FILTER_D:
         'legend': " $\mathcal{D}_{"+div+"}$ : partie de "+selectionSymbole("D")+" de division "+div,
         'kind': "establishments"
     }
+
+DEPARTMENTS_1 = {}
+
+for dep in FILTER_A:
+    DEPARTMENTS_1[dep] = {
+        'expression': ("(SELECT *\n"
+                       "FROM "+MAIN['R']["expression"]+"\n"
+                       "WHERE SUBSTRING(codePostalEtablissement, 1, 2) = '"+dep+"'"
+                       ") AS SelectionS"+dep),
+        'color': ( 22,  80,  45),
+        'name': "S"+dep,
+        'legend': " $\mathcal{S}_{"+div+"}$ : partie de "+selectionSymbole("R")+" dans le département "+div,
+        'kind': "establishments"
+    }
+
+DEPARTMENTS_2 = {}
+
+for dep in FILTER_A:
+    DEPARTMENTS_2[dep] = {
+        'expression': ("(SELECT *\n"
+                       "FROM "+MAIN['I']["expression"]+"\n"
+                       "WHERE Departement = '"+dep+"'"
+                       ") AS SelectionU"+dep),
+        'color': ( 22,  80,  45),
+        'name': "U"+dep,
+        'legend': " $\mathcal{U}_{"+div+"}$ : partie de "+selectionSymbole("I")+" dans le département "+div,
+        'kind': "enterprises"
+    }

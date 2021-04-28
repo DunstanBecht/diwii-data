@@ -11,21 +11,23 @@ import urllib.parse
 def inform(selections):
     print("- Exporting '"+"_with_".join([s["name"] for s in selections])+"'")
 
-def homogenize(*answers):
-    name = []
-    for a in answers:
-        for t in a:
-            if t[0] not in name:
-                name.append(t[0])
-    name.sort()
+def homogenize(answers, default=0, name=None,):
+    if name==None:
+        name = []
+        for a in answers:
+            for t in a:
+                if t[0] not in name:
+                    name.append(t[0])
+        name.sort()
     data = []
     for a in answers:
         d = [None for i in range(len(name))]
         for i in range(len(a)):
-            d[name.index(a[i][0])] = a[i][1]
+            if a[i][0] in name:
+                d[name.index(a[i][0])] = a[i][1]
         for i in range(len(d)):
             if d[i]==None:
-                d[i]=0
+                d[i]=default
         data.append(d)
     name = [str(n) for n in name]
     return name, data

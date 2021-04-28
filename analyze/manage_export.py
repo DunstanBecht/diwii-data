@@ -135,4 +135,7 @@ if tools.terminals.do("export data 'report'"):
     if tools.terminals.do("export 'i2df.tex'"):
         export.report.i2df()
 
+    if tools.terminals.do("export 'stats.tex'"):
+        export.report.stats()
+        
 tools.terminals.finished()

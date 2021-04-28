@@ -15,18 +15,17 @@ FOLDER = "../exported/report/"
 
     #========= EXPORT FUNCTIONS ==========================================#
 
+def count(selection):
+    return tools.connect.execute("SELECT COUNT(*) FROM "+selection["expression"])[0][0]
+
 def selections():
     import codes.insee
 
     f = open(FOLDER+"selections.tex", "w", encoding='utf-8')
 
-    def countEnterprises(enterprises, f):
-        size_enterprises = tools.connect.execute("SELECT COUNT(*) FROM "+enterprises["expression"])[0][0]
-        f.write("\\newcommand\SelectionEnterprises"+enterprises["name"]+"{"+str(size_enterprises)+"}\n")
-
-    def countEstablishements(establishments, f):
-        size_establishments = tools.connect.execute("SELECT COUNT(*) FROM "+establishments["expression"])[0][0]
-        f.write("\\newcommand\SelectionEstablishments"+establishments["name"]+"{"+str(size_establishments)+"}\n")
+    def writeCount(selection, f):
+        size = count(selection)
+        f.write("\\newcommand\Selection"+selection["kind"].capitalize()+selection["name"]+"{"+str(size)+"}\n")
 
     for selection in tools.selections.MAIN:
         f.write("\\newcommand\Selection"+selection+"{"+tools.selections.selectionSymbole(selection)[1:-1]+"}\n")
@@ -34,10 +33,10 @@ def selections():
         f.write("\\newcommand\SelectionDescription"+selection+"{"+tools.selections.MAIN[selection]["legend"]+"}\n")
 
         if tools.selections.MAIN[selection]["kind"]=="enterprises":
-            countEnterprises(tools.selections.MAIN[selection], f)
+            writeCount(tools.selections.MAIN[selection], f)
         if tools.selections.MAIN[selection]["kind"]=="establishments":
-            countEstablishements(tools.selections.MAIN[selection], f)
-            countEnterprises(tools.selections.groupByEnterprise(tools.selections.MAIN[selection]), f)
+            writeCount(tools.selections.MAIN[selection], f)
+            writeCount(tools.selections.groupByEnterprise(tools.selections.MAIN[selection]), f)
 
     f.write("\\newcommand\FilterA{\n")
     for d in tools.selections.FILTER_A:
@@ -82,4 +81,24 @@ def i2df():
         levers.append(tex)
 
     f.write(" \\\ \hline \n".join(levers)+" \\\ ")
+    f.close()
+
+def stats():
+    A = 0.02
+    p = 0.03
+    n_E = count(tools.selections.MAIN["E"])
+    Z_theo = 1.96
+    n_R_theo = int( Z_theo**2*n_E*p*(1-p)/((A*A*n_E)+(Z_theo**2*p*(1-p))) )+1
+    n_R_real = count(tools.selections.MAIN["R"])
+    Z_real = A/(p*(1-p)*(1/n_R_real-1/n_E))**(1/2)
+    import scipy.integrate as integrate
+    import math
+    def f(x):
+        return math.exp(-(1/2)*x**2)/(2*math.pi)**(1/2)
+    P = integrate.quad(f, -Z_real, Z_real)[0]
+    f = open(FOLDER+"stats.tex", "w", encoding='utf-8')
+    f.write("\\newcommand\\nRtheo{"+str(n_R_theo)+"} \n")
+    f.write("\\newcommand\Zreal{"+str(int(100*Z_real)/100)+"} \n")
+    f.write("\\newcommand\Preal{"+str(int(10000*P)/10000)+"} \n")
+    f.write("\\newcommand\Reliability{"+str(int(10000*P)/100)+"} \n")
     f.close()

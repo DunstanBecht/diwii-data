@@ -1,9 +1,8 @@
 *__pycache__
 *.csv
-*.html
+*.txt
 *.ods
 *.xlsx
-*.pdf
 *.png
 *.tex
 *admin*

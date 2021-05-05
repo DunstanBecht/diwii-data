@@ -118,6 +118,10 @@ if tools.terminals.do("export data 'survey'"):
         for p in partitions:
             export.survey.listTextAnswer(*p[0])
 
+    if tools.terminals.do("export wordcloud 'answers'"):
+        for p in partitions:
+            export.survey.wordcloudAnswer(*p[0])
+
 if tools.terminals.do("export data 'aif'"):
     import export.aif
 

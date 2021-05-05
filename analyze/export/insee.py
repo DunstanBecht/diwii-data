@@ -60,7 +60,7 @@ def figureEstablishmentsByWorkforce(*selections):
         answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(answers, 0, [c for c in codes.insee.WORKFORCES])
     fig, x = tools.export.templateFigure(selections, data)
-    fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.15)
+    fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.13)
     plt.xlabel("Tranche d'effectif de l'établissement")
     plt.ylabel("Nombre d'établissements")
     plt.xticks(x, [codes.insee.WORKFORCES[n] for n in name], rotation = 90)

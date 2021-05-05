@@ -27,7 +27,7 @@ def figureEnterprisesByWorkforce(*selections):
                    "GROUP BY Effectif\n"
                    "ORDER BY Effectif ASC")
         answers.append(tools.connect.execute(request))
-    name, data = tools.export.homogenize(answers)
+    name, data = tools.export.homogenize(answers, 0, ["0-13", "14-19", "20-49", "50-249", "250-499", "500-5000", ""])
     for i in range(len(name)):
         if name[i]=="":
             name[i]="?"

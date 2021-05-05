@@ -5,9 +5,9 @@
 
     #========= IMPORTS ===================================================#
 
+import html
 import matplotlib.pyplot as plt
 import numpy as np
-import html
 
 import tools.connect
 import tools.selections
@@ -86,6 +86,20 @@ def listTextAnswer(*selections):
                 f.write('''\item "'''+". ".join([s.strip().capitalize() for s in html.unescape(answers[i][j]).split('.')]).strip()+'''"\n''')
             f.close()
 
+def wordcloudAnswer(*selections):
+    tools.export.inform(selections)
+    tools.selections.checkKind(selections)
+    for column in ["answer2i", "answer7"]:
+        answers = []
+        for selection in selections:
+            request = "SELECT "+column+" FROM "+selection["expression"]+" WHERE "+column+" NOT LIKE ''"
+            answers.append([a[0] for a in tools.connect.execute(request)])
+        for i in range(len(selections)):
+            text = " ".join(answers[i])
+            f = open(FOLDER+column+"/"+selections[i]["name"]+".txt", "w", encoding='utf-8')
+            f.write(" ".join(answers[i]))
+            f.close()
+
 def figureEstablishmentsByDivision(*selections):
     tools.export.inform(selections)
     assert tools.selections.checkKind(selections)=="establishments"
@@ -98,8 +112,8 @@ def figureEstablishmentsByDivision(*selections):
                    "ORDER BY SUBSTRING(activitePrincipaleEtablissement, 1, 2) ASC")
         answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_D)
-    fig, x = tools.export.templateFigure(selections, data)
-    fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.06)
+    fig, x = tools.export.templateFigure(selections, data, (9, 10))
+    fig.subplots_adjust(left=0.1, right=0.99, top=0.99, bottom=0.05)
     plt.xlabel("Division APE")
     plt.ylabel("Nombre d'établissements")
     plt.xticks(x, name)
@@ -136,7 +150,7 @@ def figureEstablishmentsByDepartment(*selections):
         answers.append(tools.connect.execute(request))
     name, data = tools.export.homogenize(answers, 0, tools.selections.FILTER_A)
     fig, x = tools.export.templateFigure(selections, data)
-    fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.12)
+    fig.subplots_adjust(left=0.09, right=0.99, top=0.99, bottom=0.05)
     plt.xlabel("Département")
     plt.ylabel("Nombre d'établissements")
     plt.xticks(x, name, rotation = 0)

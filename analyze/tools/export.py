@@ -39,7 +39,7 @@ def barGeometry(selections):
     else:
         return bar_width, (len(selections)-1)*bar_width/2
 
-def templateFigure(selections, data, figsize=(9, 11)):
+def templateFigure(selections, data, figsize=(9, 11.5)):
     fig, ax = plt.subplots(figsize=figsize)
     plt.grid(True)
     bar_width, pitch = barGeometry(selections)
